@@ -7,8 +7,13 @@
 # 3) A imagem de nosso projeto Go precisa ter menos de 2MB =)
 # Dica: No vídeo de introdução sobre o Docker quando falamos sobre o sistema de arquivos em camadas, apresento uma imagem "raiz", talvez seja uma boa utilizá-la.
 # Divirta-se
-FROM golang:latest
+FROM golang:latest AS builder
 WORKDIR /usr/src/app
 COPY helloWorld.go .
 RUN go build helloWorld.go
+
+
+FROM scratch
+WORKDIR /usr/src/app
+COPY --from=builder /usr/src/app .
 CMD ["./helloWorld"]
