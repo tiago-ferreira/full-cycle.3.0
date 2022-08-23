@@ -12,7 +12,6 @@ WORKDIR /usr/src/app
 COPY helloWorld.go .
 RUN go build helloWorld.go
 
-
 FROM scratch
 WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app .
