@@ -8,6 +8,18 @@
 # Suba tudo em um repositório e faça a entrega.
 version : '3'
 services:
+
+  nginx:
+    build: 
+      context: ./nginx
+    container_name: nginx
+    networks: 
+      - node-network
+    ports: 
+      - "8080:80"
+    depends_on: 
+       - app
+
   app:
     build: 
       context: ./node
