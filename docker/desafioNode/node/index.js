@@ -7,16 +7,33 @@ const config = {
     password: 'nodeuser',
     database:'nodedb'
 };
-const mysql = require('mysql')
-const connection = mysql.createConnection(config)
-
-const sql = `INSERT INTO people(name) values('Tiago')`
-connection.query(sql)
-connection.end()
 
 
-app.get('/', (req,res) => {
-    res.send('<h1>Full Cycle</h1>')
+
+
+
+
+
+ app.get('/', (req,res) => {
+    const mysql = require('mysql')
+    const connection = mysql.createConnection(config)
+    const sql = `INSERT INTO people(name) values('Tiago'),('Xablau'),('Hulk'),('Chaves')`
+    connection.query(sql)
+
+    connection.query('SELECT * FROM people;', (err, rows) => {
+        if (err) {
+          throw err;
+        }
+        let toReturn = ''
+        rows.forEach(element => {
+            toReturn += `<li>${element.name}</li>`
+        });
+        res.send(`<h1>Full Cycle Rocks!</h1>
+                  <ul>
+                    ${toReturn}
+                 </ul>`);  
+    });
+    connection.end()
 })
 
 app.listen(port, ()=> {

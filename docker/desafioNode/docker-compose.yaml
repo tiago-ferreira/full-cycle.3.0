@@ -10,7 +10,7 @@ version : '3'
 services:
   app:
     build: 
-      context: node
+      context: ./node
     command: npm start    
     container_name: app
     networks: 
