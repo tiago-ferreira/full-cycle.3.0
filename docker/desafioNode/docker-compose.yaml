@@ -1,0 +1,48 @@
+# Nesse desafio você colocará em prática o que aprendemos em relação a utilização do nginx como proxy reverso. 
+# A idéia principal é que quando um usuário acesse o nginx, o mesmo fará uma chamada em nossa aplicação node.js. 
+# Essa aplicação por sua vez adicionará um registro em nosso banco de dados mysql, cadastrando um nome na tabela people.
+# O retorno da aplicação node.js para o nginx deverá ser:
+# <h1>Full Cycle Rocks!</h1>
+# - Lista de nomes cadastrada no banco de dados.
+# Gere o docker-compose de uma forma que basta apenas rodarmos: docker-compose up -d que tudo deverá estar funcionando e disponível na porta: 8080.
+# Suba tudo em um repositório e faça a entrega.
+version : '3'
+services:
+  app:
+    build: 
+      context: node
+    command: npm start    
+    container_name: app
+    networks: 
+      - node-network
+    volumes: 
+      - ./node:/usr/app
+    tty: true
+    ports: 
+      - "3000:3000"
+    depends_on: 
+       - db
+  
+  db:
+    image: mysql
+    container_name: db
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment: 
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_USER=nodeuser
+      - MYSQL_PASSWORD=nodeuser
+    volumes:
+      - my-db:/var/lib/mysql
+      - "./scripts/schema.sql:/docker-entrypoint-initdb.d/1.sql"
+    networks: 
+      - node-network
+
+volumes:
+  my-db:
+
+networks: 
+  node-network:
+    driver: bridge
